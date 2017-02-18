@@ -19,7 +19,7 @@ class Staff(models.Model):
     grade = models.CharField(max_length=20, default='')  # 大几
     rank = models.CharField(max_length=20, default='')
     introduction = models.TextField()
-    image = models.ImageField(upload_to='staff')
+    image = models.ImageField(upload_to='static/xxsh/staff')
     department = models.ForeignKey(Department)
     chef_flag = models.BooleanField(default=False)  # 是否是部长
 
@@ -31,7 +31,7 @@ class X_news(models.Model):
     '''校学生会的新闻'''
     title = models.CharField(max_length=100)
     body = models.TextField()
-    image = models.ImageField(upload_to='xnews')
+    image = models.ImageField(upload_to='static/xxsh/xnews')
     video = models.CharField(max_length=200, blank=True)
     exc_editor = models.CharField(max_length=20, default='本新闻执行编辑')
     duty_editor = models.CharField(max_length=20, default='本新闻责任编辑')
@@ -46,7 +46,7 @@ class X_news(models.Model):
 class X_activity(models.Model):
     name = models.CharField(max_length=100)
     body = models.TextField()
-    image = models.ImageField(upload_to='activity')
+    image = models.ImageField(upload_to='static/xxsh/activity')
     video = models.CharField(max_length=200, blank=True)
     sponsor = models.CharField(max_length=20)
     datetime = models.DateTimeField(default=datetime.now())
@@ -73,7 +73,7 @@ class School(models.Model):
 class S_news(models.Model):  # 院会的新闻
     title = models.CharField(max_length=100)
     body = models.TextField()
-    image = models.ImageField(upload_to='snews')
+    image = models.ImageField(upload_to='static/xxsh/snews')
     video = models.CharField(max_length=200, blank=True)
     exc_editor = models.CharField(max_length=20, default='本新闻执行编辑')
     duty_editor = models.CharField(max_length=20, default='本新闻责任编辑')
@@ -93,7 +93,7 @@ class Information(models.Model):
     datetime = models.DateTimeField(default=datetime.now())
     view_num = models.IntegerField(default=0)
     title = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='information', default=None)
+    image = models.ImageField(upload_to='static/xxsh/information', default=None)
     body = models.TextField()
     exc_editor = models.CharField(max_length=20, default='本公告执行编辑')
     duty_editor = models.CharField(max_length=20, default='本公告责任编辑')
@@ -103,7 +103,7 @@ class Information(models.Model):
 
 
 class Carousel(models.Model):  # Carousel是轮播器的意思
-    image = models.ImageField(upload_to='carousel', default=None)
+    image = models.ImageField(upload_to='static/xxsh/carousel', default=None)
     url = models.CharField(max_length=100)
     title = models.CharField(max_length=100)
     content = models.CharField(max_length=200)
@@ -117,7 +117,7 @@ class Apply(models.Model):
     school = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
     introduction = models.TextField()
-    image = models.ImageField(upload_to='apply')
+    image = models.ImageField(upload_to='static/xxsh/apply', blank=True)
     datetime = models.DateTimeField(default=datetime.now())
 
     def __unicode__(self):
@@ -145,7 +145,7 @@ class SomeElse(models.Model):
 
 class Star(models.Model):  # 某月之星
     content = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='star', default=None)
+    image = models.ImageField(upload_to='static/xxsh/star', default=None)
 
     def __unicode__(self):
         return self.content
@@ -153,7 +153,7 @@ class Star(models.Model):  # 某月之星
 
 class WondVideo(models.Model):
     title = models.CharField(max_length=100, default="视频的标题")
-    compress_image = models.ImageField(upload_to='wonderful_video', default=None)
+    compress_image = models.ImageField(upload_to='static/xxsh/wonderful_video', default=None)
     upload_time = models.DateTimeField(default=datetime.now())
     video_url = models.CharField(max_length=200)
 
@@ -164,7 +164,7 @@ class WondVideo(models.Model):
 class WondPicture(models.Model):
     title = models.CharField(max_length=100, default="图片的标题，不要超过100个字")
     upload_time = models.DateTimeField(default=datetime.now())
-    image = models.ImageField(upload_to='wonderful_picture')
+    image = models.ImageField(upload_to='static/xxsh/wonderful_picture')
 
     def __unicode__(self):
         return self.title

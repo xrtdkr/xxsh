@@ -25,5 +25,9 @@ xversion.register_models()
 
 urlpatterns = [
     url(r'xadmin/', include(xadmin.site.urls)),
-    url(r'index/$', 'frontEndInterface.views.index')
+    url(r'index/$', 'frontEndInterface.views.index'),
+    url(r'xnews/(.*)', 'frontEndInterface.views.xnews'),
+    url(r'snews/(.*)', 'frontEndInterface.views.snews'),
+    url(r'safegaurd/', 'frontEndInterface.views.safegaurd'),
+    url(r'apply/', 'frontEndInterface.views.apply'),
 ]

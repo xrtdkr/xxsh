@@ -5,9 +5,12 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from frontEndInterface.models import *
 from django.utils import timezone
+from frontEndInterface.tools import static_url_handle
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
+
 
 def index(request):
     if request.method == 'GET':
@@ -19,7 +22,7 @@ def index(request):
             ele_dict = {}
 
             ele_dict['url'] = None
-            ele_dict['image'] = carousel.image.url
+            ele_dict['image'] = static_url_handle(carousel.image.url)
             ret_carousel_list.append(ele_dict)
         ret_dict['carousel'] = ret_carousel_list
 
@@ -127,7 +130,7 @@ def index(request):
         for star in Star.objects.all():
             ele_dict = {}
             ele_dict['title'] = star.content
-            ele_dict['imageUrl'] = star.image.url
+            ele_dict['imageUrl'] = static_url_handle(star.image.url)
 
             ret_star_list.append(ele_dict)
 
@@ -136,14 +139,14 @@ def index(request):
         # 精彩视频
         ret_video_list = []
         ele_dict = {}
-        ele_dict['imageUrl'] = WondVideo.objects.all()[0].compress_image.url
+        ele_dict['imageUrl'] = static_url_handle(WondVideo.objects.all()[0].compress_image.url)
         ret_video_list.append(ele_dict)
         ret_dict['wonderfulVideo'] = ret_video_list
 
         # 精彩图片
         ret_image_list = []
         ele_dict = {}
-        ele_dict['imageUrl'] = WondPicture.objects.all()[0].image.url
+        ele_dict['imageUrl'] = static_url_handle(WondPicture.objects.all()[0].image.url)
         ret_image_list.append(ele_dict)
         ret_dict['wonderfulImage'] = ret_image_list
 
@@ -152,4 +155,109 @@ def index(request):
     else:
         return HttpResponse('fail')
 
-def
+
+def snews(request, dynamic_news_url=None):
+    if request.method == 'GET':
+        if not dynamic_news_url:
+            # 动态url为空的情况，赋予列表
+            ret_list = []
+            for new in S_news.objects.all().order_by('datetime'):
+                ele_dict = {}
+                ele_dict['title'] = new.title
+                ele_dict['viewNum'] = new.view_num
+                ele_dict['datetime'] = new.datetime.strftime(("%Y-%m-%d %H:%M"))
+                ret_list.append(ele_dict)
+
+            return JsonResponse({'news': ret_list})
+
+        else:
+            new = S_news.objects.get(title=dynamic_news_url)
+            new.view_num += 1
+            new.save()
+            ret_dict = {}
+            ret_dict['title'] = new.title
+            ret_dict['body'] = new.body
+            ret_dict['image'] = static_url_handle(new.image.url)
+            if not new.video:
+                ret_dict['video'] = new.video
+
+            ret_dict['excEditor'] = new.exc_editor
+            ret_dict['dutyEditor'] = new.duty_editor
+            ret_dict['viewNum'] = new.view_num
+            ret_dict['datetime'] = new.datetime
+
+            return JsonResponse(ret_dict)
+    else:
+        return HttpResponse('fail, wrong request method')
+
+
+def xnews(request, dynamic_news_url=None):
+    if request.method == 'GET':
+        if not dynamic_news_url:
+            # 动态url为空的情况，赋予列表
+            ret_list = []
+            for new in X_news.objects.all().order_by('datetime'):
+                ele_dict = {}
+                ele_dict['title'] = new.title
+                ele_dict['viewNum'] = new.view_num
+                ele_dict['datetime'] = new.datetime.strftime(("%Y-%m-%d %H:%M"))
+                ret_list.append(ele_dict)
+
+            return JsonResponse({'news': ret_list})
+
+        else:
+            new = X_news.objects.get(title=dynamic_news_url)
+            new.view_num += 1
+            new.save()
+            ret_dict = {}
+            ret_dict['title'] = new.title
+            ret_dict['body'] = new.body
+            ret_dict['image'] = static_url_handle(new.image.url)
+            if not new.video:
+                ret_dict['video'] = new.video
+
+            ret_dict['excEditor'] = new.exc_editor
+            ret_dict['dutyEditor'] = new.duty_editor
+            ret_dict['viewNum'] = new.view_num
+            ret_dict['datetime'] = new.datetime
+
+            return JsonResponse(ret_dict)
+    else:
+        return HttpResponse('fail, wrong request method')
+
+
+@csrf_exempt
+def safegaurd(request):
+    if request.method == 'POST':
+        try:
+            name = request.POST.get('name', '')
+            title = request.POST.get('title', '')
+            content = request.POST.get('content', '')
+            Safeguard.objects.create(name=name, title=title, content=content)
+            return JsonResponse({'status': 'success'})
+        except:
+            return HttpResponse('参数不全')
+    else:
+        return HttpResponse('fail, method wrong')
+
+
+def apply(request):
+    if request.method == 'POST':
+        try:
+            name = request.POST.get('name', '')
+            school = request.POST.get('school', '')
+            department = request.POST.get('department', '')
+            introduction = request.POST.get('introduction', '')
+            try:
+                image = request.FILES['image']
+            except:
+                image = None
+            Apply.objects.create(name=name, school=school, department=department, introduction=introduction, image=image)
+            return JsonResponse({'status': 'success'})
+        except:
+            return HttpResponse('参数不全')
+    else:
+        return HttpResponse('fail, method wrong')
+
+
+
