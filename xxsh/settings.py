@@ -114,5 +114,5 @@ STATIC_ROOT = 'static'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/xxsh'),)
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_URLS_REGEX = r'^/api/.*$'
+CORS_URLS_REGEX = r'.*'
 CORS_ALLOW_METHODS = ('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'PATCH', 'OPTIONS')
